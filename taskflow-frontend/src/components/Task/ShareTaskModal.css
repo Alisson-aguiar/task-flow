@@ -1,0 +1,309 @@
+/* Overlay fixo que cobre toda a tela */
+.share-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9998;
+}
+
+/* Modal centralizado - igual ao CreateTaskModal */
+.share-modal-content {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) !important;
+  background: #2d2d2d;
+  border-radius: 24px;
+  padding: 2rem;
+  width: 90%;
+  max-width: 500px;
+  max-height: 85vh;
+  overflow-y: auto;
+  z-index: 9999;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Tema claro */
+.share-modal-content.dark {
+  background: #2d2d2d;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.share-modal-content:not(.dark) {
+  background: #ffffff;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Scrollbar personalizada */
+.share-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.share-modal-content::-webkit-scrollbar-track {
+  background: #1e1e1e;
+  border-radius: 10px;
+}
+
+.share-modal-content::-webkit-scrollbar-thumb {
+  background: #8B5CF6;
+  border-radius: 10px;
+}
+
+/* Header do modal */
+.share-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.share-modal-header h2 {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.3rem;
+  font-weight: 600;
+  margin: 0;
+  color: white;
+}
+
+.share-modal-content:not(.dark) .share-modal-header h2 {
+  color: #1e1e1e;
+}
+
+/* Botão fechar */
+.share-close-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 12px;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a0aec0;
+  width: 36px;
+  height: 36px;
+}
+
+.share-close-btn:hover {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+  transform: rotate(90deg);
+}
+
+/* Informações da tarefa */
+.share-task-info {
+  background: rgba(139, 92, 246, 0.1);
+  border-radius: 16px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.share-task-info h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  color: #8B5CF6;
+}
+
+.share-task-info p {
+  font-size: 0.85rem;
+  margin: 0;
+  line-height: 1.4;
+  color: #a0aec0;
+}
+
+.share-modal-content:not(.dark) .share-task-info p {
+  color: #718096;
+}
+
+/* Grupo de formulário */
+.share-form-group {
+  margin-bottom: 1.2rem;
+}
+
+.share-form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: white;
+}
+
+.share-modal-content:not(.dark) .share-form-group label {
+  color: #1e1e1e;
+}
+
+/* Wrapper do input */
+.share-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.share-input-icon {
+  position: absolute;
+  left: 1rem;
+  color: #8B5CF6;
+  font-size: 1rem;
+}
+
+/* Input de email */
+.share-input-wrapper input {
+  width: 100%;
+  padding: 0.75rem 1rem 0.75rem 2.5rem;
+  background: #1e1e1e;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  border-radius: 12px;
+  font-size: 0.9rem;
+  color: white;
+  transition: all 0.3s ease;
+  outline: none;
+}
+
+.share-modal-content:not(.dark) .share-input-wrapper input {
+  background: #f5f5f5;
+  color: #1e1e1e;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+}
+
+.share-input-wrapper input:focus {
+  outline: none;
+  border-color: #8B5CF6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.share-input-wrapper input::placeholder {
+  color: #718096;
+}
+
+/* Botões de permissão */
+.share-permission-buttons {
+  display: flex;
+  gap: 1rem;
+}
+
+.share-permission-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  background: #1e1e1e;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: white;
+}
+
+.share-modal-content:not(.dark) .share-permission-btn {
+  background: #f5f5f5;
+  color: #1e1e1e;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.share-permission-btn.active {
+  background: rgba(139, 92, 246, 0.2);
+  border-color: #8B5CF6;
+  color: #8B5CF6;
+}
+
+.share-permission-btn:hover:not(.active) {
+  background: rgba(139, 92, 246, 0.1);
+  transform: translateY(-2px);
+}
+
+/* Botões de ação */
+.share-modal-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.share-cancel-btn,
+.share-submit-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+/* Botão Cancelar */
+.share-cancel-btn {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.share-modal-content:not(.dark) .share-cancel-btn {
+  background: #f5f5f5;
+  color: #1e1e1e;
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.share-cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-2px);
+}
+
+.share-modal-content:not(.dark) .share-cancel-btn:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* Botão Compartilhar */
+.share-submit-btn {
+  background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+  color: white;
+}
+
+.share-submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px -5px rgba(139, 92, 246, 0.4);
+}
+
+.share-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .share-modal-content {
+    padding: 1.2rem;
+    width: 95%;
+  }
+  
+  .share-permission-buttons {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .share-modal-header h2 {
+    font-size: 1.1rem;
+  }
+  
+  .share-permission-btn {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+}

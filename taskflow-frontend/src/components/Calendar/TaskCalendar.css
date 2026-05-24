@@ -1,0 +1,290 @@
+.task-calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.calendar-wrapper {
+  border-radius: 20px;
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.dashboard.dark .calendar-wrapper {
+  background: rgba(45, 45, 45, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.dashboard.light .calendar-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+/* Estilos do react-calendar */
+.react-calendar {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font-family: inherit;
+}
+
+.react-calendar__navigation {
+  margin-bottom: 1rem;
+}
+
+.react-calendar__navigation button {
+  background: transparent;
+  border: none;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: 0.5rem;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.dashboard.dark .react-calendar__navigation button {
+  color: white;
+}
+
+.dashboard.light .react-calendar__navigation button {
+  color: #1e1e1e;
+}
+
+.react-calendar__navigation button:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.react-calendar__month-view__weekdays {
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.dashboard.dark .react-calendar__month-view__weekdays {
+  color: #a0aec0;
+}
+
+.dashboard.light .react-calendar__month-view__weekdays {
+  color: #718096;
+}
+
+.react-calendar__month-view__weekdays__weekday {
+  padding: 0.5rem;
+}
+
+.react-calendar__tile {
+  padding: 0.75rem;
+  position: relative;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.dashboard.dark .react-calendar__tile {
+  color: white;
+}
+
+.dashboard.light .react-calendar__tile {
+  color: #1e1e1e;
+}
+
+.react-calendar__tile:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.react-calendar__tile--active {
+  background: rgba(139, 92, 246, 0.2) !important;
+  color: #8B5CF6 !important;
+}
+
+.react-calendar__tile--now {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+/* Badges no calendário */
+.calendar-tile-badge {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  display: flex;
+  gap: 2px;
+  font-size: 0.7rem;
+}
+
+.task-count-badge {
+  background: #8B5CF6;
+  color: white;
+  border-radius: 10px;
+  padding: 1px 5px;
+  font-size: 0.6rem;
+}
+
+.urgent-badge {
+  background: #EF4444;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+  font-weight: bold;
+}
+
+.completed-badge {
+  background: #10B981;
+  color: white;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6rem;
+}
+
+/* Tarefas da data selecionada */
+.selected-date-tasks {
+  border-radius: 20px;
+  padding: 1.5rem;
+}
+
+.dashboard.dark .selected-date-tasks {
+  background: rgba(45, 45, 45, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.2);
+}
+
+.dashboard.light .selected-date-tasks {
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+}
+
+.selected-date-tasks h3 {
+  margin-bottom: 1rem;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.dashboard.dark .selected-date-tasks h3 {
+  color: white;
+}
+
+.dashboard.light .selected-date-tasks h3 {
+  color: #1e1e1e;
+}
+
+.date-tasks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.date-task-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border-radius: 12px;
+  transition: all 0.2s ease;
+}
+
+.dashboard.dark .date-task-item {
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.dashboard.light .date-task-item {
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.date-task-item:hover {
+  background: rgba(139, 92, 246, 0.1);
+}
+
+.task-priority-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.priority-URGENT {
+  background: #EF4444;
+}
+
+.priority-HIGH {
+  background: #F97316;
+}
+
+.priority-MEDIUM {
+  background: #F59E0B;
+}
+
+.priority-LOW {
+  background: #10B981;
+}
+
+.task-info {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.task-info strong {
+  font-size: 0.85rem;
+}
+
+.dashboard.dark .task-info strong {
+  color: white;
+}
+
+.dashboard.light .task-info strong {
+  color: #1e1e1e;
+}
+
+.task-status {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+}
+
+.status-PENDING {
+  background: rgba(245, 158, 11, 0.2);
+  color: #F59E0B;
+}
+
+.status-IN_PROGRESS {
+  background: rgba(59, 130, 246, 0.2);
+  color: #3B82F6;
+}
+
+.status-COMPLETED {
+  background: rgba(16, 185, 129, 0.2);
+  color: #10B981;
+}
+
+.status-CANCELLED {
+  background: rgba(239, 68, 68, 0.2);
+  color: #EF4444;
+}
+
+@media (max-width: 768px) {
+  .calendar-wrapper {
+    padding: 1rem;
+  }
+
+  .react-calendar__tile {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  .task-info {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
