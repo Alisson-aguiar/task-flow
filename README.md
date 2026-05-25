@@ -10,9 +10,7 @@
 
 ## 🎥 Vídeo Demonstrativo
 
-<video src="video/projeto-rodando.webm" controls width="100%">
-  Seu navegador não suporta o elemento de vídeo.
-</video>
+https://github.com/Alisson-aguiar/task-flow/video/projeto-rodando.webm
 
 ## 📸 Screenshots
 
