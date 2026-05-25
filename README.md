@@ -10,7 +10,7 @@
 
 ## 🎥 Vídeo Demonstrativo
 
-https://github.com/Alisson-aguiar/task-flow/video/projeto-rodando.webm
+https://github.com/Alisson-aguiar/task-flow/projeto-rodando.webm
 
 ## 📸 Screenshots
 
