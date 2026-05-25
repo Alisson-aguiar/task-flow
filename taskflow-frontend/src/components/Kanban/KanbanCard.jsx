@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import { FaTrash, FaEdit, FaSave, FaTimes, FaClock, FaComments } from 'react-icons/fa';
+import { FaTrash, FaEdit, FaSave, FaTimes, FaClock } from 'react-icons/fa';
 import './Kanban.css';
 
 const KanbanCard = ({ task, onUpdate, onDelete, isDark, isDragging }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedTitle, setEditedTitle] = useState(task.title);
   const [editedDescription, setEditedDescription] = useState(task.description || '');
+  const [isUpdating, setIsUpdating] = useState(false);
 
   const {
     attributes,
@@ -32,9 +33,35 @@ const KanbanCard = ({ task, onUpdate, onDelete, isDark, isDragging }) => {
     LOW: '#10B981'
   };
 
-  const handleSave = () => {
-    onUpdate(task.id, { title: editedTitle, description: editedDescription });
+  const handleSave = async () => {
+    if (!editedTitle.trim()) {
+      return;
+    }
+
+    setIsUpdating(true);
+    try {
+      await onUpdate(task.id, {
+        title: editedTitle.trim(),
+        description: editedDescription
+      });
+      setIsEditing(false);
+    } catch (error) {
+      console.error('Erro ao atualizar:', error);
+    } finally {
+      setIsUpdating(false);
+    }
+  };
+
+  const handleCancel = () => {
+    setEditedTitle(task.title);
+    setEditedDescription(task.description || '');
     setIsEditing(false);
+  };
+
+  const handleDelete = async () => {
+    if (window.confirm('Tem certeza que deseja excluir esta tarefa?')) {
+      await onDelete(task.id);
+    }
   };
 
   if (isEditing) {
@@ -45,16 +72,23 @@ const KanbanCard = ({ task, onUpdate, onDelete, isDark, isDragging }) => {
           value={editedTitle}
           onChange={(e) => setEditedTitle(e.target.value)}
           placeholder="Título"
+          autoFocus
+          disabled={isUpdating}
         />
         <textarea
           value={editedDescription}
           onChange={(e) => setEditedDescription(e.target.value)}
           placeholder="Descrição"
           rows="2"
+          disabled={isUpdating}
         />
-        <div className="card-actions">
-          <button onClick={handleSave} className="save-btn"><FaSave /> Salvar</button>
-          <button onClick={() => setIsEditing(false)} className="cancel-btn"><FaTimes /> Cancelar</button>
+        <div className="card-edit-actions">
+          <button onClick={handleSave} className="save-edit-btn" disabled={isUpdating}>
+            <FaSave /> {isUpdating ? 'Salvando...' : 'Salvar'}
+          </button>
+          <button onClick={handleCancel} className="cancel-edit-btn" disabled={isUpdating}>
+            <FaTimes /> Cancelar
+          </button>
         </div>
       </div>
     );
@@ -71,10 +105,10 @@ const KanbanCard = ({ task, onUpdate, onDelete, isDark, isDragging }) => {
       <div className="card-header">
         <div className="priority-dot" style={{ background: priorityColors[task.priority] }} />
         <div className="card-actions">
-          <button onClick={() => setIsEditing(true)} className="icon-btn edit">
+          <button onClick={() => setIsEditing(true)} className="icon-btn edit" title="Editar">
             <FaEdit />
           </button>
-          <button onClick={() => onDelete(task.id)} className="icon-btn delete">
+          <button onClick={handleDelete} className="icon-btn delete" title="Excluir">
             <FaTrash />
           </button>
         </div>

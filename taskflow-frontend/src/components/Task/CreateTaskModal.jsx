@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FaTimes, FaPlus } from 'react-icons/fa';
 import { useTheme } from '../../contexts/ThemeContext';
-import api from '../../services/api';
 import toast from 'react-hot-toast';
 import './CreateTaskModal.css';
 
@@ -24,28 +23,33 @@ const CreateTaskModal = ({ isOpen, onClose, onCreate }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!task.title.trim()) {
+
+    const titleTrimmed = task.title.trim();
+
+    if (!titleTrimmed) {
       toast.error('Digite um título para a tarefa');
       return;
     }
-    
+
+    const taskData = {
+      title: titleTrimmed,
+      description: task.description || '',
+      priority: task.priority
+    };
+
     setLoading(true);
+
     try {
-      await api.post('/tasks', task);
-      toast.success('Tarefa criada com sucesso!');
-      setTask({ title: '', description: '', priority: 'MEDIUM' });
-      if (onCreate) onCreate();
-      onClose();
-    } catch (error) {
-      toast.error(error.response?.data?.message || 'Erro ao criar tarefa');
+      const result = await onCreate(taskData);
+      if (result !== false) {
+        setTask({ title: '', description: '', priority: 'MEDIUM' });
+        onClose();
+      }
+    } catch (err) {
+      console.error('Erro no modal:', err);
     } finally {
       setLoading(false);
     }
-  };
-
-  const modalStyle = {
-    background: isDark ? '#2d2d2d' : '#ffffff',
-    border: isDark ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(139, 92, 246, 0.3)'
   };
 
   return (
@@ -63,22 +67,20 @@ const CreateTaskModal = ({ isOpen, onClose, onCreate }) => {
             initial={{ opacity: 0, scale: 0.9, y: 50 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.9, y: 50 }}
-            transition={{ type: "spring", damping: 25, stiffness: 300 }}
             className="create-modal-content"
-            style={modalStyle}
+            style={{
+              background: isDark ? '#2d2d2d' : '#ffffff',
+              border: isDark ? '1px solid rgba(139, 92, 246, 0.3)' : '1px solid rgba(139, 92, 246, 0.3)'
+            }}
           >
             <div className="create-modal-header">
               <h2>
                 <FaPlus style={{ color: '#8B5CF6' }} />
                 Criar Nova Tarefa
               </h2>
-              <motion.button
-                whileHover={{ rotate: 90 }}
-                onClick={onClose}
-                className="create-close-btn"
-              >
+              <button onClick={onClose} className="create-close-btn">
                 <FaTimes />
-              </motion.button>
+              </button>
             </div>
 
             <form onSubmit={handleSubmit}>
@@ -86,7 +88,7 @@ const CreateTaskModal = ({ isOpen, onClose, onCreate }) => {
                 <label>Título da tarefa *</label>
                 <input
                   type="text"
-                  placeholder="Ex: Estudar React, Fazer deploy, etc."
+                  placeholder="Ex: Estudar React"
                   value={task.title}
                   onChange={(e) => setTask({ ...task, title: e.target.value })}
                   required
@@ -102,10 +104,10 @@ const CreateTaskModal = ({ isOpen, onClose, onCreate }) => {
               <div className="create-form-group">
                 <label>Descrição</label>
                 <textarea
-                  placeholder="Descreva os detalhes da sua tarefa..."
+                  placeholder="Descreva sua tarefa..."
                   value={task.description}
                   onChange={(e) => setTask({ ...task, description: e.target.value })}
-                  rows="4"
+                  rows="3"
                   style={{
                     background: isDark ? '#1e1e1e' : '#f5f5f5',
                     color: isDark ? 'white' : '#1e1e1e',
@@ -118,10 +120,8 @@ const CreateTaskModal = ({ isOpen, onClose, onCreate }) => {
                 <label>Prioridade</label>
                 <div className="create-priority-buttons">
                   {priorities.map((p) => (
-                    <motion.button
+                    <button
                       key={p.value}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
                       type="button"
                       className={`create-priority-btn ${task.priority === p.value ? 'active' : ''}`}
                       style={{
@@ -131,37 +131,21 @@ const CreateTaskModal = ({ isOpen, onClose, onCreate }) => {
                       }}
                       onClick={() => setTask({ ...task, priority: p.value })}
                     >
-                      <span style={{ color: p.color, fontSize: '16px' }}>{p.icon}</span>
+                      <span style={{ color: p.color }}>{p.icon}</span>
                       {p.label}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
               </div>
 
               <div className="create-modal-actions">
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="button"
-                  onClick={onClose}
-                  className="create-cancel-btn"
-                  style={{
-                    background: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.05)',
-                    color: isDark ? 'white' : '#1e1e1e'
-                  }}
-                >
+                <button type="button" onClick={onClose} className="create-cancel-btn">
                   Cancelar
-                </motion.button>
-                <motion.button
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.98 }}
-                  type="submit"
-                  disabled={loading}
-                  className="create-submit-btn"
-                >
+                </button>
+                <button type="submit" disabled={loading} className="create-submit-btn">
                   {loading ? 'Criando...' : 'Criar Tarefa'}
                   <FaPlus />
-                </motion.button>
+                </button>
               </div>
             </form>
           </motion.div>

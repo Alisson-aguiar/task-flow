@@ -13,54 +13,82 @@ export const useTasks = () => {
       const params = new URLSearchParams();
       if (filters.status) params.append('status', filters.status);
       if (filters.priority) params.append('priority', filters.priority);
-      
+
       const response = await api.get(`/tasks?${params.toString()}`);
-      setTasks(response.data.tasks);
+      setTasks(response.data.tasks || []);
+      return response.data.tasks;
     } catch (error) {
-      toast.error('Erro ao carregar tarefas');
+      console.error('Erro ao carregar tarefas', error);
+      setTasks([]);
+      return [];
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    loadTasks();
+    const token = localStorage.getItem('token');
+    if (token) {
+      loadTasks();
+    }
   }, [filters]);
 
   const createTask = async (taskData) => {
-    setLoading(true);
     try {
-      await api.post('/tasks', taskData);
-      toast.success('Tarefa criada com sucesso!');
-      await loadTasks();
-      return true;
-    } catch (error) {
-      toast.error('Erro ao criar tarefa');
+      const response = await api.post('/tasks', taskData);
+      if (response.data && response.data.task) {
+        // Recarregar a lista
+        await loadTasks();
+        // Mostrar toast de sucesso APENAS AQUI
+        toast.success('Tarefa criada com sucesso!');
+        return true;
+      }
       return false;
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error('Erro ao criar tarefa', error);
+      // Mostrar toast de erro APENAS AQUI
+      toast.error(error.response?.data?.message || 'Erro ao criar tarefa');
+      return false;
     }
   };
 
   const updateTask = async (id, data) => {
     try {
-      await api.put(`/tasks/${id}`, data);
-      toast.success('Tarefa atualizada!');
-      await loadTasks();
+      const response = await api.put(`/tasks/${id}`, data);
+      if (response.data) {
+        await loadTasks();
+        toast.success('Tarefa atualizada!');
+        return true;
+      }
+      return false;
     } catch (error) {
+      console.error('Erro ao atualizar tarefa', error);
       toast.error('Erro ao atualizar tarefa');
+      return false;
     }
   };
 
   const deleteTask = async (id) => {
     try {
       await api.delete(`/tasks/${id}`);
-      toast.success('Tarefa deletada!');
       await loadTasks();
+      toast.success('Tarefa deletada!');
+      return true;
     } catch (error) {
+      console.error('Erro ao deletar tarefa', error);
       toast.error('Erro ao deletar tarefa');
+      return false;
     }
   };
 
-  return { tasks, loading, filters, setFilters, createTask, updateTask, deleteTask, loadTasks };
+  return {
+    tasks,
+    loading,
+    filters,
+    setFilters,
+    createTask,
+    updateTask,
+    deleteTask,
+    loadTasks
+  };
 };

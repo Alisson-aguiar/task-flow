@@ -10,10 +10,15 @@ export class TaskController {
       const { title, description, priority, dueDate } = req.body;
       const userId = (req as any).user.userId;
 
+      // Validação básica
+      if (!title || title.trim() === '') {
+        return res.status(400).json({ message: 'Título é obrigatório' });
+      }
+
       const task = await prisma.task.create({
         data: {
-          title,
-          description,
+          title: title.trim(),
+          description: description || null,
           priority: priority || 'MEDIUM',
           dueDate: dueDate ? new Date(dueDate) : null,
           userId
@@ -25,7 +30,7 @@ export class TaskController {
         task
       });
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao criar tarefa:', error);
       return res.status(500).json({ message: 'Erro ao criar tarefa' });
     }
   }
@@ -60,7 +65,7 @@ export class TaskController {
         }
       });
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao buscar tarefas:', error);
       return res.status(500).json({ message: 'Erro ao buscar tarefas' });
     }
   }
@@ -81,7 +86,7 @@ export class TaskController {
 
       return res.json(task);
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao buscar tarefa:', error);
       return res.status(500).json({ message: 'Erro ao buscar tarefa' });
     }
   }
@@ -105,11 +110,11 @@ export class TaskController {
       const task = await prisma.task.update({
         where: { id },
         data: {
-          title,
-          description,
-          status,
-          priority,
-          dueDate: dueDate ? new Date(dueDate) : undefined
+          title: title !== undefined ? title : existingTask.title,
+          description: description !== undefined ? description : existingTask.description,
+          status: status !== undefined ? status : existingTask.status,
+          priority: priority !== undefined ? priority : existingTask.priority,
+          dueDate: dueDate !== undefined ? (dueDate ? new Date(dueDate) : null) : existingTask.dueDate
         }
       });
 
@@ -118,7 +123,7 @@ export class TaskController {
         task
       });
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao atualizar tarefa:', error);
       return res.status(500).json({ message: 'Erro ao atualizar tarefa' });
     }
   }
@@ -141,7 +146,7 @@ export class TaskController {
 
       return res.json({ message: 'Tarefa deletada com sucesso' });
     } catch (error) {
-      console.error(error);
+      console.error('Erro ao deletar tarefa:', error);
       return res.status(500).json({ message: 'Erro ao deletar tarefa' });
     }
   }

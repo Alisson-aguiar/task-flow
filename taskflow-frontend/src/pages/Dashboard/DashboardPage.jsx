@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Toaster } from 'react-hot-toast';
+import { motion } from 'framer-motion';
+import { Toaster, toast } from 'react-hot-toast';
 import { FaTasks, FaCheckCircle, FaSpinner, FaClock, FaChartLine, FaShareAlt, FaList, FaClipboardList, FaCalendarAlt } from 'react-icons/fa';
 import Header from '../../components/Layout/Header';
 import TaskCard from '../../components/Task/TaskCard';
@@ -22,10 +22,9 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
   const [loadingShared, setLoadingShared] = useState(false);
   const [viewMode, setViewMode] = useState('list');
   const [user, setUser] = useState(initialUser);
-  const { tasks, loading, filters, setFilters, createTask, updateTask, deleteTask, loadTasks } = useTasks();
+  const { tasks, loading, filters, setFilters, createTask, updateTask, deleteTask } = useTasks();
   const { isDark } = useTheme();
 
-  // Função para recarregar o perfil
   const refreshUser = async () => {
     try {
       const response = await api.get('/profile');
@@ -36,14 +35,11 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
       };
       localStorage.setItem('user', JSON.stringify(userWithProfile));
       setUser(userWithProfile);
-      return userWithProfile;
     } catch (error) {
       console.error('Erro ao recarregar perfil', error);
-      return null;
     }
   };
 
-  // Atualizar usuário quando o initialUser mudar
   useEffect(() => {
     if (initialUser) {
       setUser(initialUser);
@@ -89,7 +85,6 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
       await api.put(`/tasks/${taskId}`, data);
       toast.success('Tarefa atualizada!');
       loadSharedTasks();
-      loadTasks();
     } catch (error) {
       toast.error('Erro ao atualizar tarefa');
     }
@@ -105,15 +100,34 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
     }
   };
 
+  const handleCreateTask = async (taskData) => {
+    return await createTask(taskData);
+  };
+
+  // Componente de loading centralizado
+  if (loading && tasks.length === 0) {
+    return (
+      <div className="fullscreen-loading">
+        <div className="loading-spinner"></div>
+        <p>Carregando tarefas...</p>
+      </div>
+    );
+  }
+
   return (
     <div className={`dashboard ${isDark ? 'dark' : 'light'}`}>
-      <Toaster position="top-right" toastOptions={{
-        style: { 
-          background: isDark ? '#2d2d2d' : '#ffffff',
-          color: isDark ? '#fff' : '#1e1e1e',
-          borderRadius: '12px'
-        }
-      }} />
+      <Toaster 
+        position="top-right" 
+        toastOptions={{
+          style: { 
+            background: isDark ? '#2d2d2d' : '#ffffff',
+            color: isDark ? '#fff' : '#1e1e1e',
+            borderRadius: '12px'
+          },
+          success: { duration: 3000 },
+          error: { duration: 4000 }
+        }} 
+      />
       
       <Header
         user={user}
@@ -145,7 +159,7 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
             className={`tab-btn ${activeTab === 'shared' ? 'active' : ''}`}
             onClick={() => setActiveTab('shared')}
           >
-            <FaShareAlt /> Compartilhadas Comigo
+            <FaShareAlt /> Compartilhadas
             {sharedTasks.length > 0 && <span className="tab-badge">{sharedTasks.length}</span>}
           </button>
         </div>
@@ -188,7 +202,7 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
             <div className="progress-section" style={cardStyle}>
               <div className="progress-header">
                 <FaChartLine style={{ color: '#8B5CF6' }} />
-                <h3 style={{ color: isDark ? 'white' : '#1e1e1e' }}>Progresso Geral</h3>
+                <h3 style={{ color: isDark ? 'white' : '#1e1e1e' }}>Progresso</h3>
                 <span style={{ color: '#8B5CF6' }}>{Math.round(progress)}%</span>
               </div>
               <div className="progress-bar">
@@ -207,43 +221,26 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
             {viewMode === 'list' && (
               <div className="tasks-section">
                 <h2 style={{ color: isDark ? 'white' : '#1e1e1e' }}>
-                  <FaTasks />
-                  Minhas Tarefas
+                  <FaTasks /> Minhas Tarefas
                   <span className="task-count">{tasks.length}</span>
                 </h2>
                 
-                {loading ? (
-                  <div className="loading-container">
-                    <div className="loading-spinner"></div>
-                    <p style={{ color: isDark ? 'white' : '#1e1e1e' }}>Carregando tarefas...</p>
+                {tasks.length === 0 ? (
+                  <div className="empty-state" style={cardStyle}>
+                    <div className="empty-icon">📭</div>
+                    <h3>Nenhuma tarefa</h3>
+                    <p>Crie sua primeira tarefa!</p>
                   </div>
-                ) : tasks.length === 0 ? (
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    className="empty-state"
-                    style={cardStyle}
-                  >
-                    
-                    <h3 style={{ color: isDark ? 'white' : '#1e1e1e' }}>Nenhuma tarefa encontrada</h3>
-                    <p style={{ color: isDark ? '#a0aec0' : '#718096' }}>Clique em "Nova Tarefa" para começar</p>
-                  </motion.div>
                 ) : (
                   <div className="tasks-grid">
-                    {tasks.map((task, index) => (
-                      <motion.div
+                    {tasks.map((task) => (
+                      <TaskCard 
                         key={task.id}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                      >
-                        <TaskCard 
-                          task={task} 
-                          onUpdate={updateTask} 
-                          onDelete={deleteTask}
-                          isOwner={true}
-                        />
-                      </motion.div>
+                        task={task} 
+                        onUpdate={updateTask} 
+                        onDelete={deleteTask}
+                        isOwner={true}
+                      />
                     ))}
                   </div>
                 )}
@@ -251,63 +248,42 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
             )}
 
             {viewMode === 'kanban' && (
-              <div className="kanban-section">
-                <KanbanBoard
-                  tasks={tasks}
-                  onUpdateTask={updateTask}
-                  onDeleteTask={deleteTask}
-                />
-              </div>
+              <KanbanBoard tasks={tasks} onUpdateTask={updateTask} onDeleteTask={deleteTask} />
             )}
 
             {viewMode === 'calendar' && (
-              <div className="calendar-section">
-                <TaskCalendar tasks={tasks} />
-              </div>
+              <TaskCalendar tasks={tasks} />
             )}
           </>
         ) : (
           <div className="tasks-section">
             <h2 style={{ color: isDark ? 'white' : '#1e1e1e' }}>
-              <FaShareAlt />
-              Tarefas Compartilhadas Comigo
+              <FaShareAlt /> Tarefas Compartilhadas
               <span className="task-count">{sharedTasks.length}</span>
             </h2>
             
             {loadingShared ? (
               <div className="loading-container">
                 <div className="loading-spinner"></div>
-                <p style={{ color: isDark ? 'white' : '#1e1e1e' }}>Carregando tarefas compartilhadas...</p>
+                <p>Carregando...</p>
               </div>
             ) : sharedTasks.length === 0 ? (
-              <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="empty-state"
-                style={cardStyle}
-              >
-                
-                <h3 style={{ color: isDark ? 'white' : '#1e1e1e' }}>Nenhuma tarefa compartilhada</h3>
-                <p style={{ color: isDark ? '#a0aec0' : '#718096' }}>Quando alguém compartilhar uma tarefa com você, aparecerá aqui</p>
-              </motion.div>
+              <div className="empty-state" style={cardStyle}>
+                <div className="empty-icon">🔗</div>
+                <h3>Nenhuma tarefa compartilhada</h3>
+              </div>
             ) : (
               <div className="tasks-grid">
-                {sharedTasks.map((share, index) => (
-                  <motion.div
+                {sharedTasks.map((share) => (
+                  <TaskCard 
                     key={share.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: index * 0.05 }}
-                  >
-                    <TaskCard 
-                      task={share.task} 
-                      onUpdate={updateSharedTask} 
-                      onDelete={() => removeSharedTask(share.taskId, share.sharedWith)}
-                      isOwner={false}
-                      sharedBy={share.task.user.name}
-                      permission={share.permission}
-                    />
-                  </motion.div>
+                    task={share.task} 
+                    onUpdate={updateSharedTask} 
+                    onDelete={() => removeSharedTask(share.taskId, share.sharedWith)}
+                    isOwner={false}
+                    sharedBy={share.task.user.name}
+                    permission={share.permission}
+                  />
                 ))}
               </div>
             )}
@@ -318,7 +294,7 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
       <CreateTaskModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        onCreate={createTask}
+        onCreate={handleCreateTask}
       />
     </div>
   );

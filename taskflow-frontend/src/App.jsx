@@ -20,7 +20,7 @@ function App() {
         color: 'white'
       }}>
         <div className="loading-spinner"></div>
-        <p style={{ marginTop: '1rem' }}>Carregando...</p>
+        {/* <p style={{ marginTop: '1rem' }}>Carregando...</p> */}
       </div>
     );
   }
