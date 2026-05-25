@@ -1,6 +1,6 @@
 # 📝 TaskFlow - Sistema de Gestão de Tarefas
 
-![TaskFlow Banner](https://via.placeholder.com/1200x400/8B5CF6/ffffff?text=TaskFlow)
+![TaskFlow Banner](images/login.jpg)
 
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
@@ -10,15 +10,15 @@
 
 ## 🎥 Vídeo Demonstrativo
 
-<video src="video/projeto-rodando.webm" controls width="100%">
-  Seu navegador não suporta o elemento de vídeo.
-</video>
+[![▶️ Assistir no YouTube](https://img.shields.io/badge/▶️-Assistir%20no%20YouTube-FF0000?style=for-the-badge&logo=youtube&logoColor=white)](https://www.youtube.com/watch?v=yRqUNfCrMNo)
+
+Clique no botão para assistir a demonstração completa do TaskFlow!
 
 ## 📸 Screenshots
 
 | Dashboard | Kanban | Calendário |
 |-----------|--------|------------|
-| ![Dashboard](images/pdf.jpg) | ![Kanban](images/excel.jpg) | ![Calendário](images/csv.jpg) |
+| ![Dashboard](images/banner.jpg) | ![Kanban](images/graficos.jpg) | ![Calendário](images/kanban.jpg) |
 
 ### 📎 Exportação de Relatórios
 
@@ -81,3 +81,114 @@ TaskFlow é uma aplicação completa de gestão de tarefas com funcionalidades a
 ### Pré-requisitos
 - Node.js 18+
 - npm ou yarn
+
+## 🎯 API Endpoints
+
+### 🔐 Autenticação
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/v1/register` | Registrar novo usuário |
+| POST | `/api/v1/login` | Fazer login na aplicação |
+| GET | `/api/v1/auth/google` | Login com conta Google |
+| GET | `/api/v1/auth/github` | Login com conta GitHub |
+| GET | `/api/v1/profile` | Buscar dados do perfil |
+| PUT | `/api/v1/profile` | Atualizar perfil do usuário |
+| PUT | `/api/v1/profile/change-password` | Alterar senha |
+| POST | `/api/v1/profile/avatar` | Upload de avatar |
+
+### 📝 Tarefas
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/v1/tasks` | Listar todas as tarefas do usuário |
+| GET | `/api/v1/tasks/:id` | Buscar uma tarefa específica |
+| POST | `/api/v1/tasks` | Criar uma nova tarefa |
+| PUT | `/api/v1/tasks/:id` | Atualizar uma tarefa |
+| DELETE | `/api/v1/tasks/:id` | Deletar uma tarefa |
+
+### 🔗 Compartilhamento
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/v1/tasks/:id/share` | Compartilhar tarefa com outro usuário |
+| GET | `/api/v1/shared-with-me` | Listar tarefas compartilhadas comigo |
+| DELETE | `/api/v1/tasks/:taskId/share/:email` | Remover compartilhamento |
+
+### 💬 Comentários
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/v1/tasks/:taskId/comments` | Listar comentários de uma tarefa |
+| POST | `/api/v1/tasks/:taskId/comments` | Adicionar comentário |
+| DELETE | `/api/v1/comments/:commentId` | Deletar comentário |
+
+### 🔔 Notificações
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| GET | `/api/v1/notifications` | Listar notificações do usuário |
+| PUT | `/api/v1/notifications/:id/read` | Marcar notificação como lida |
+
+### 📎 Upload de Arquivos
+
+| Método | Endpoint | Descrição |
+|--------|----------|-----------|
+| POST | `/api/v1/upload` | Upload de arquivos (imagens/docs) |
+| GET | `/api/v1/files` | Listar arquivos enviados |
+
+---
+
+## 🔧 Variáveis de Ambiente
+
+### Backend (.env)
+
+```env
+# Servidor
+NODE_ENV=development
+PORT=3333
+
+# Banco de Dados
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/taskflow"
+
+# Segurança
+JWT_SECRET="seu-secret-aqui-mude-para-producao"
+BCRYPT_ROUNDS=10
+
+# Rate Limit
+RATE_LIMIT_WINDOW_MS=900000
+RATE_LIMIT_MAX=100
+
+# Google OAuth
+GOOGLE_CLIENT_ID=seu_client_id_google.apps.googleusercontent.com
+GOOGLE_CLIENT_SECRET=seu_client_secret_google
+GOOGLE_CALLBACK_URL=http://localhost:3333/api/v1/auth/google/callback
+
+# GitHub OAuth
+GITHUB_CLIENT_ID=seu_client_id_github
+GITHUB_CLIENT_SECRET=seu_client_secret_github
+GITHUB_CALLBACK_URL=http://localhost:3333/api/v1/auth/github/callback
+
+# Session
+SESSION_SECRET=taskflow-super-secret-key-2024
+FRONTEND_URL=http://localhost:5173
+
+### Frontend (.env)
+# API URL
+VITE_API_URL=http://localhost:3333
+
+### Banco de Dados (Supabase - Produção)
+
+# Substitua pelos dados do seu projeto Supabase
+DATABASE_URL="postgresql://postgres:[PASSWORD]@db.[PROJECT_REF].supabase.co:5432/postgres"
+
+### 🐛 Tratamento de Erros
+
+Código | Significado
+200	| Sucesso
+201 | Criado com sucesso
+400 | Requisição inválida
+401	| Não autenticado
+403	| Acesso negado
+404	| Recurso não encontrado
+500	| Erro interno do servidor

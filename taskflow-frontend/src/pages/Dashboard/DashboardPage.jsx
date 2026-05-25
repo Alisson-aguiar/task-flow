@@ -71,8 +71,8 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
     { label: 'Pendentes', value: tasks.filter(t => t.status === 'PENDING').length, icon: <FaClock />, color: '#F59E0B' }
   ];
 
-  const progress = tasks.length > 0 
-    ? (tasks.filter(t => t.status === 'COMPLETED').length / tasks.length) * 100 
+  const progress = tasks.length > 0
+    ? (tasks.filter(t => t.status === 'COMPLETED').length / tasks.length) * 100
     : 0;
 
   const cardStyle = {
@@ -104,31 +104,33 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
     return await createTask(taskData);
   };
 
-  // Componente de loading centralizado
+  // Loading fullscreen centralizado
   if (loading && tasks.length === 0) {
     return (
       <div className="fullscreen-loading">
-        <div className="loading-spinner"></div>
-        <p>Carregando tarefas...</p>
+        <div className="loading-container-center">
+          <div className="loading-spinner"></div>
+          <p className="loading-text">Carregando tarefas...</p>
+        </div>
       </div>
     );
   }
 
   return (
     <div className={`dashboard ${isDark ? 'dark' : 'light'}`}>
-      <Toaster 
-        position="top-right" 
+      <Toaster
+        position="top-right"
         toastOptions={{
-          style: { 
+          style: {
             background: isDark ? '#2d2d2d' : '#ffffff',
             color: isDark ? '#fff' : '#1e1e1e',
             borderRadius: '12px'
           },
           success: { duration: 3000 },
           error: { duration: 4000 }
-        }} 
+        }}
       />
-      
+
       <Header
         user={user}
         onLogout={onLogout}
@@ -224,7 +226,7 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
                   <FaTasks /> Minhas Tarefas
                   <span className="task-count">{tasks.length}</span>
                 </h2>
-                
+
                 {tasks.length === 0 ? (
                   <div className="empty-state" style={cardStyle}>
                     <div className="empty-icon">📭</div>
@@ -234,10 +236,10 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
                 ) : (
                   <div className="tasks-grid">
                     {tasks.map((task) => (
-                      <TaskCard 
+                      <TaskCard
                         key={task.id}
-                        task={task} 
-                        onUpdate={updateTask} 
+                        task={task}
+                        onUpdate={updateTask}
                         onDelete={deleteTask}
                         isOwner={true}
                       />
@@ -261,7 +263,7 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
               <FaShareAlt /> Tarefas Compartilhadas
               <span className="task-count">{sharedTasks.length}</span>
             </h2>
-            
+
             {loadingShared ? (
               <div className="loading-container">
                 <div className="loading-spinner"></div>
@@ -275,10 +277,10 @@ const DashboardPage = ({ user: initialUser, onLogout }) => {
             ) : (
               <div className="tasks-grid">
                 {sharedTasks.map((share) => (
-                  <TaskCard 
+                  <TaskCard
                     key={share.id}
-                    task={share.task} 
-                    onUpdate={updateSharedTask} 
+                    task={share.task}
+                    onUpdate={updateSharedTask}
                     onDelete={() => removeSharedTask(share.taskId, share.sharedWith)}
                     isOwner={false}
                     sharedBy={share.task.user.name}
