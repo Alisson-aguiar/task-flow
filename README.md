@@ -1,6 +1,6 @@
 # 📝 TaskFlow - Sistema de Gestão de Tarefas
 
-![TaskFlow Banner](https://via.placeholder.com/1200x400/8B5CF6/ffffff?text=TaskFlow)
+![TaskFlow Banner]| ![Dashboard](images/login.jpg) | ![Kanban](images/Criar.jpg) |
 
 [![Node.js](https://img.shields.io/badge/Node.js-18.x-green.svg)](https://nodejs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.x-blue.svg)](https://www.typescriptlang.org/)
@@ -18,7 +18,7 @@
 
 | Dashboard | Kanban | Calendário |
 |-----------|--------|------------|
-| ![Dashboard](images/pdf.jpg) | ![Kanban](images/excel.jpg) | ![Calendário](images/csv.jpg) |
+| ![Dashboard](images/banner.jpg) | ![Kanban](images/graficos.jpg) | ![Calendário](images/kanban.jpg) |
 
 ### 📎 Exportação de Relatórios
 
